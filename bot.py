@@ -1,5 +1,26 @@
+from colorama import Fore, Back, Style
+import pyfiglet
+import datetime
+import time
+import pytz
 
-print("Starting boot-up process...")
+
+ascii_text = pyfiglet.figlet_format("Edith")
+print(Fore.YELLOW)
+print(ascii_text)
+
+current_time = datetime.datetime.now(pytz.timezone('Asia/Kolkata')) 
+time.sleep(2)
+print(Fore.YELLOW + f"[{current_time.month}/{current_time.day}/{current_time.year} {current_time.hour}:{current_time.minute}:{current_time.second}] " + Fore.BLUE + f"[INFO] Starting bot with version " + Fore.GREEN + "2.0.0b1")
+current_time = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
+time.sleep(2)
+print(Fore.YELLOW + f"[{current_time.month}/{current_time.day}/{current_time.year} {current_time.hour}:{current_time.minute}:{current_time.second}] " + Fore.BLUE + f"[LOADER] Loaded " + Fore.GREEN + f"7 " + Fore.BLUE + "events!")
+current_time = datetime.datetime.now(pytz.timezone('Asia/Kolkata')) 
+time.sleep(2)
+print(Fore.YELLOW + f"[{current_time.month}/{current_time.day}/{current_time.year} {current_time.hour}:{current_time.minute}:{current_time.second}] " + Fore.BLUE + f"[LOADER] Loaded " + Fore.GREEN + f"36 " + Fore.BLUE + "commands!")
+current_time = datetime.datetime.now(pytz.timezone('Asia/Kolkata')) 
+time.sleep(1)
+#print(Fore.YELLOW + f"[{current_time.month}/{current_time.day}/{current_time.year} {current_time.hour}:{current_time.minute}:{current_time.second}] " + Fore.BLUE + f"[LOADER] Loaded " + Fore.GREEN + f"36 " + Fore.BLUE + "commands!")
 import discord
 from discord.ext import commands
 import os
@@ -13,34 +34,30 @@ from datetime import datetime, timedelta
 from discord.commands import \
     slash_command
 
-print("Loading envoirment variables")
 load_dotenv()
 token = os.getenv("TOKEN")
 prefix = os.getenv("PREFIX")
-print("Loaded envoirment variables")
 
 os.chdir("./")
 
-async def get_prefix(client, message):
-    with open("prefix.json", "r") as f:
-        prefixes = json.load(f)
+# Custom prefixies disabled because its not synced and won't work for all servers
+# async def get_prefix(client, message):
+#     with open("prefix.json", "r") as f:
+#         prefixes = json.load(f)
 
-    return prefixes[str(message.guild.id)]
+#     return prefixes[str(message.guild.id)]
 
-print("Creating client")
-bot = commands.Bot(command_prefix=prefix)
+bot = commands.Bot(command_prefix=">")
 bot.remove_command('help')
-print("Client created")
 
-print("Loading cogs and commands")
 for filename in os.listdir('./cogs'):
 	if filename.endswith(".py"):
 		bot.load_extension(f'cogs.{filename[:-3]}')
-		print(f"\"{filename[:-3]}\" cog has been loaded.") 
 
 owner_ids = [702385226407608341, 929270204222046249]
 bot.blacklisted_users = []
 
+# On connect event is commented out because it messes with the registerations of slash commands
 # @bot.event
 # async def on_connect():
 #     print('Connected to Discord')
@@ -168,49 +185,50 @@ async def unblacklist(ctx, user: discord.Member):
 
 """Custom Prefix stuff"""
 
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def prefix(ctx, prefix):
+# Disabled because not synced with every server
+# @bot.command()
+# @commands.has_permissions(administrator=True)
+# async def prefix(ctx, prefix):
 
-    with open("prefix.json", "r") as f:
-        prefixes = json.load(f)
+#     with open("prefix.json", "r") as f:
+#         prefixes = json.load(f)
 
-    prefixes[str(ctx.guild.id)] = prefix
+#     prefixes[str(ctx.guild.id)] = prefix
 
-    with open("prefix.json", "w") as f:
-        json.dump(prefixes,f)    
+#     with open("prefix.json", "w") as f:
+#         json.dump(prefixes,f)    
 
-    e = discord.Embed(title=":white_check_mark: Success!", description=f"The prefix was changed to {prefix}", color=discord.Color.green())
-    await ctx.send(embed=e)
+#     e = discord.Embed(title=":white_check_mark: Success!", description=f"The prefix was changed to {prefix}", color=discord.Color.green())
+#     await ctx.send(embed=e)
 
-@bot.event
-async def on_guild_join(guild):
-    with open("prefix.json", "r") as f:
-        prefixes = json.load(f)
+# @bot.event
+# async def on_guild_join(guild):
+#     with open("prefix.json", "r") as f:
+#         prefixes = json.load(f)
 
-    prefixes[str(guild.id)] = ">"
+#     prefixes[str(guild.id)] = ">"
     
-    with open("prefix.json", "w") as f:
-        json.dump(prefixes, f, indent=4)
-    channel = bot.get_channel(936237231436365834)
-    e = discord.Embed(title="New Guild!")
-    e.add_field(name="Guild Name", value=f"**{guild.name}**", inline=False)
-    e.add_field(name="Guild ID", value=f"**{guild.id}**", inline=False)
-    await channel.send(embed=e)
+#     with open("prefix.json", "w") as f:
+#         json.dump(prefixes, f, indent=4)
+#     channel = bot.get_channel(936237231436365834)
+#     e = discord.Embed(title="New Guild!")
+#     e.add_field(name="Guild Name", value=f"**{guild.name}**", inline=False)
+#     e.add_field(name="Guild ID", value=f"**{guild.id}**", inline=False)
+#     await channel.send(embed=e)
 
-@bot.event
-async def on_guild_remove(guild):
-    with open("prefix.json", "r") as f:
-        prefixes = json.load(f)
+# @bot.event
+# async def on_guild_remove(guild):
+#     with open("prefix.json", "r") as f:
+#         prefixes = json.load(f)
 
-    prefixes.pop(str(guild.id))
+#     prefixes.pop(str(guild.id))
     
-    with open("prefix.json", "w") as f:
-        json.dump(prefixes, f, indent=4)
-    channel = bot.get_channel(936237231436365834)
-    e = discord.Embed(title="Left Guild!")
-    e.add_field(name="Guild Name", value=f"**{guild.name}**")
-    await channel.send(embed=e)
+#     with open("prefix.json", "w") as f:
+#         json.dump(prefixes, f, indent=4)
+#     channel = bot.get_channel(936237231436365834)
+#     e = discord.Embed(title="Left Guild!")
+#     e.add_field(name="Guild Name", value=f"**{guild.name}**")
+#     await channel.send(embed=e)
 
 """Blacklist Stuff"""
 
@@ -219,7 +237,8 @@ ownerid2 = owner_ids[1]
 
 @bot.event
 async def on_ready():
-    print("Bot is online!")
+    current_time = datetime.now(pytz.timezone('Asia/Kolkata'))
+    print(Fore.YELLOW + f"[{current_time.month}/{current_time.day}/{current_time.year} {current_time.hour}:{current_time.minute}:{current_time.second}] " + Fore.BLUE + f"[INFO] Logged in as " + Fore.YELLOW + f"{bot.user}")
     data = read_json("blacklist")
     bot.blacklisted_users = data["blacklistedUsers"]
     channel = bot.get_channel(936669729777680404)
@@ -228,6 +247,7 @@ async def on_ready():
     await channel.send(embed=e)
     global launched_at
     launched_at = datetime.now()
+    print(Fore.RED)
 
 @bot.event
 async def on_message(message):
@@ -248,6 +268,18 @@ async def on_command_error(ctx, error):
         embed.add_field(name="This command is on cooldown!", value="Use this command again in  {:.2f}s".format(error.retry_after), inline=False)
         await ctx.respond(embed=embed)
     elif isinstance(error,commands.CheckFailure):
+        em = discord.Embed(title="No permission :x:", description="You don't have enough permission(s) to execute that command!", color=discord.Color.red())
+        await ctx.respond(embed=em)
+    else:
+        print(error)
+
+@bot.event
+async def on_application_command_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        embed= discord.Embed(title="Slow Down :raised_back_of_hand:", color=discord.Color.red())
+        embed.add_field(name="This command is on cooldown!", value="Use this command again in  {:.2f}s".format(error.retry_after), inline=False)
+        await ctx.respond(embed=embed)
+    elif isinstance(error, commands.CheckFailure):
         em = discord.Embed(title="No permission :x:", description="You don't have enough permission(s) to execute that command!", color=discord.Color.red())
         await ctx.respond(embed=em)
     else:
@@ -309,7 +341,7 @@ async def setstatus(ctx, type, *, status):
         e = discord.Embed(title=":x: You are not allowed to run this command!", color=discord.Color.red())
         await ctx.respond(embed=e)
 
-
+# Helper functions for interacting with json files.
 def read_json(filename):
     with open(f"{filename}.json", "r") as f:
         data = json.load(f)
@@ -568,6 +600,4 @@ async def joke(ctx):
     	title="Joke", description="Tells you a joke.", color=discord.Color.blue())
     embed.add_field(name="**Syntax**", value=">joke")
     await ctx.send(embed=embed)
-
-print("Connecting to Discord")
 bot.run(token)

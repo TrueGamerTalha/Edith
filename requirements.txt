@@ -1,15 +1,11 @@
-discord.py~=1.4.1
+py-cord~=2.0.0
 asyncio
-youtube_dl
 wikipedia
-praw
 requests
-pillow
 captcha
 ffmpeg 
-mcuuid==0.2
 statcord.py
 pyfiglet
 humanize
-discord.py[voice]
+py-cord[voice]
 wikipedia
