@@ -33,8 +33,12 @@ from datetime import datetime, timedelta
 from discord.commands import \
     slash_command
 import topgg
-import env
+from dotenv import load_dotenv
 
+load_dotenv()
+token = os.getenv("token")
+dbl = os.getenv("dbl_token")
+dbl_token = str(dbl)
 os.chdir("./")
 
 async def get_prefix(client, message):

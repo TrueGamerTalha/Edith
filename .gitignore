@@ -93,6 +93,9 @@ dbl.py
 /dbl.py
 .dbl.py
 /.dbl.py
+dbl
+dbl.py/
+dbl.py\
 
 # pyenv
 .python-version
