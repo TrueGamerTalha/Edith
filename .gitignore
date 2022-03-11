@@ -86,9 +86,13 @@ ipython_config.py
 #env
 .env.local
 .env
-.env.py
-env.py
-/env.py
+
+
+#DBL TOken file
+dbl.py
+/dbl.py
+.dbl.py
+/.dbl.py
 
 # pyenv
 .python-version
