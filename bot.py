@@ -34,14 +34,13 @@ from discord.commands import \
     slash_command
 import topgg
 from dotenv import load_dotenv
+from dbl import dbl_token
 
 load_dotenv()
 token = os.getenv("token")
-dbl = os.getenv("dbl_token")
-dbl_token = str(dbl)
 os.chdir("./")
 
-async def get_prefix(client, message):
+async def get_prefix(bot, message):
     with open("prefix.json", "r") as f:
         prefixes = json.load(f)
 
@@ -259,9 +258,10 @@ async def on_shard_ready(shard_id):
     global launched_at
     launched_at = datetime.now()
     print(Fore.RED)
-# The sync guilds does not start at on_shard_ready or it will be ran everytime one shard is ready
-syncguilds.start()
-
+    if shard_id == 4:
+        syncguilds.start()
+    else:
+        pass
 @bot.event
 async def on_message(message):
     if message.author.id == bot.user.id:
