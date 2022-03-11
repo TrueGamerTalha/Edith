@@ -258,10 +258,11 @@ async def on_shard_ready(shard_id):
     global launched_at
     launched_at = datetime.now()
     print(Fore.RED)
-    if shard_id == 4:
+    if shard_id == 0:
         syncguilds.start()
     else:
         pass
+
 @bot.event
 async def on_message(message):
     if message.author.id == bot.user.id:
