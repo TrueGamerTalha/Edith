@@ -22,7 +22,7 @@ current_time = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
 time.sleep(1)
 #print(Fore.YELLOW + f"[{current_time.month}/{current_time.day}/{current_time.year} {current_time.hour}:{current_time.minute}:{current_time.second}] " + Fore.BLUE + f"[LOADER] Loaded " + Fore.GREEN + f"36 " + Fore.BLUE + "commands!")
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 import os
 import json
 import ast
@@ -40,14 +40,13 @@ prefix = os.getenv("PREFIX")
 
 os.chdir("./")
 
-# Custom prefixies disabled because its not synced and won't work for all servers
-# async def get_prefix(client, message):
-#     with open("prefix.json", "r") as f:
-#         prefixes = json.load(f)
+async def get_prefix(bot, message):
+    with open("prefix.json", "r") as f:
+        prefixes = json.load(f)
 
-#     return prefixes[str(message.guild.id)]
+    return prefixes[str(message.guild.id)]
 
-bot = commands.Bot(command_prefix=">")
+bot = commands.Bot(command_prefix=get_prefix)
 bot.remove_command('help')
 
 for filename in os.listdir('./cogs'):
@@ -149,7 +148,7 @@ def insert_returns(body):
 async def blacklist(ctx, user: discord.Member):
     if ctx.author.id in owner_ids:
         bot.blacklisted_users.append(user.id)
-        data = read_json(blacklist)
+        data = read_json("blacklist")
         data["blacklistedUsers"].append(user.id)
         write_json(data, "blacklist")
         e = discord.Embed(title="Success! :white_check_mark:", description=f"{ctx.author.name} has been blacklisted!", color=discord.Color.green())
@@ -185,50 +184,49 @@ async def unblacklist(ctx, user: discord.Member):
 
 """Custom Prefix stuff"""
 
-# Disabled because not synced with every server
-# @bot.command()
-# @commands.has_permissions(administrator=True)
-# async def prefix(ctx, prefix):
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def prefix(ctx, prefix):
 
-#     with open("prefix.json", "r") as f:
-#         prefixes = json.load(f)
+    with open("prefix.json", "r") as f:
+        prefixes = json.load(f)
 
-#     prefixes[str(ctx.guild.id)] = prefix
+    prefixes[str(ctx.guild.id)] = prefix
 
-#     with open("prefix.json", "w") as f:
-#         json.dump(prefixes,f)    
+    with open("prefix.json", "w") as f:
+        json.dump(prefixes, f, indent=4)    
 
-#     e = discord.Embed(title=":white_check_mark: Success!", description=f"The prefix was changed to {prefix}", color=discord.Color.green())
-#     await ctx.send(embed=e)
+    e = discord.Embed(title=":white_check_mark: Success!", description=f"The prefix was changed to {prefix}", color=discord.Color.green())
+    await ctx.send(embed=e)
 
-# @bot.event
-# async def on_guild_join(guild):
-#     with open("prefix.json", "r") as f:
-#         prefixes = json.load(f)
+@bot.event
+async def on_guild_join(guild):
+    with open("prefix.json", "r") as f:
+        prefixes = json.load(f)
 
-#     prefixes[str(guild.id)] = ">"
+    prefixes[str(guild.id)] = ">"
     
-#     with open("prefix.json", "w") as f:
-#         json.dump(prefixes, f, indent=4)
-#     channel = bot.get_channel(936237231436365834)
-#     e = discord.Embed(title="New Guild!")
-#     e.add_field(name="Guild Name", value=f"**{guild.name}**", inline=False)
-#     e.add_field(name="Guild ID", value=f"**{guild.id}**", inline=False)
-#     await channel.send(embed=e)
+    with open("prefix.json", "w") as f:
+        json.dump(prefixes, f, indent=4)
+    channel = bot.get_channel(936237231436365834)
+    e = discord.Embed(title="New Guild!")
+    e.add_field(name="Guild Name", value=f"**{guild.name}**", inline=False)
+    e.add_field(name="Guild ID", value=f"**{guild.id}**", inline=False)
+    await channel.send(embed=e)
 
-# @bot.event
-# async def on_guild_remove(guild):
-#     with open("prefix.json", "r") as f:
-#         prefixes = json.load(f)
+@bot.event
+async def on_guild_remove(guild):
+    with open("prefix.json", "r") as f:
+        prefixes = json.load(f)
 
-#     prefixes.pop(str(guild.id))
+    prefixes.pop(str(guild.id))
     
-#     with open("prefix.json", "w") as f:
-#         json.dump(prefixes, f, indent=4)
-#     channel = bot.get_channel(936237231436365834)
-#     e = discord.Embed(title="Left Guild!")
-#     e.add_field(name="Guild Name", value=f"**{guild.name}**")
-#     await channel.send(embed=e)
+    with open("prefix.json", "w") as f:
+        json.dump(prefixes, f, indent=4)
+    channel = bot.get_channel(936237231436365834)
+    e = discord.Embed(title="Left Guild!")
+    e.add_field(name="Guild Name", value=f"**{guild.name}**")
+    await channel.send(embed=e)
 
 """Blacklist Stuff"""
 
@@ -248,15 +246,20 @@ async def on_ready():
     global launched_at
     launched_at = datetime.now()
     print(Fore.RED)
+    syncguilds.start()
 
 @bot.event
 async def on_message(message):
     if message.author.id == bot.user.id:
         return
-
     if message.author.id in bot.blacklisted_users:
         return
 
+    prefix = await get_prefix(bot, message)
+    if "<@!731807331796385812>" in message.content:
+        await message.reply(f"My prefix is `{prefix}`! Commands using the prefix is not recommended, you should use my slash commands!")
+
+	
     await bot.process_commands(message)
 
 """Error stuff"""
@@ -284,6 +287,18 @@ async def on_application_command_error(ctx, error):
         await ctx.respond(embed=em)
     else:
         print(error)
+
+@tasks.loop(seconds=120)
+async def syncguilds():
+    with open("prefix.json", "r") as f:
+        prefixes = json.load(f)
+    for i in bot.guilds:
+        if str(i.id) not in prefixes:
+            prefixes[str(i.id)] = ">"
+            current_time = datetime.now(pytz.timezone('Asia/Kolkata')) 
+            print(Fore.YELLOW + f"[{current_time.month}/{current_time.day}/{current_time.year} {current_time.hour}:{current_time.minute}:{current_time.second}] " + Fore.BLUE + "[Non-prefixed guild checker] Detected a guild that is non-prefixed. Adding " + Fore.GREEN + f"{i}" + Fore.BLUE + " to prefix list.")
+    with open("prefix.json", "w") as f:
+        json.dump(prefixes, f, indent=4)
 
 """Helper Functions"""
 
