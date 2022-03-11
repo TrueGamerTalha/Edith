@@ -27,18 +27,13 @@ import os
 import json
 import ast
 import dotenv
-from dotenv import load_dotenv
 import asyncio
 import humanize
 from datetime import datetime, timedelta
 from discord.commands import \
     slash_command
 import topgg
-from dbl import dbl_token
-
-load_dotenv()
-token = os.getenv("TOKEN")
-prefix = os.getenv("PREFIX")
+import env
 
 os.chdir("./")
 
