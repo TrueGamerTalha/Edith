@@ -86,11 +86,9 @@ ipython_config.py
 #env
 .env.local
 .env
-dbl.py
-/dbl.py
-.dbl.py
-/.env
-.env
+.env.py
+env.py
+/env.py
 
 # pyenv
 .python-version
