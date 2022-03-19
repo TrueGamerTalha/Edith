@@ -67,7 +67,7 @@ bot.topggpy = topgg.DBLClient(bot, dbl_token, autopost=True, post_shard_count=Tr
 async def on_autopost_success():
     print(f"{Fore.BLUE} Posted server count {Fore.GREEN}{bot.topggpy.guild_count}{Fore.BLUE}, shard count {Fore.GREEN}{bot.shard_count}{Fore.BLUE}")
 
-@tasks.loop(seconds=120)
+@tasks.loop(hours=1)
 async def syncguilds():
     with open("prefix.json", "r") as f:
         prefixes = json.load(f)
