@@ -17,5 +17,5 @@
 ## Features
 
 - Moderation, Fun, Games And Much More Commands!
-- Written In Python For Cleaner And Improved Performance!
-- Advanced Music Commands Coming Sometime In 2022!
+- Written in Python for cleaner and improved performance!
+- Advanced Music commands coming sometime In 2022!
