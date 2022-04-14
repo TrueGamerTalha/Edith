@@ -197,30 +197,8 @@ async def unblacklist(ctx, user: discord.Member):
 
 """Custom Prefix stuff"""
 
-@bot.command()
-@commands.has_permissions(administrator=True)
-async def prefix(ctx, prefix):
-
-    with open("prefix.json", "r") as f:
-        prefixes = json.load(f)
-
-    prefixes[str(ctx.guild.id)] = prefix
-
-    with open("prefix.json", "w") as f:
-        json.dump(prefixes,f)    
-
-    e = discord.Embed(title=":white_check_mark: Success!", description=f"The prefix was changed to {prefix}", color=discord.Color.green())
-    await ctx.send(embed=e)
-
 @bot.event
 async def on_guild_join(guild):
-    with open("prefix.json", "r") as f:
-        prefixes = json.load(f)
-
-    prefixes[str(guild.id)] = ">"
-    
-    with open("prefix.json", "w") as f:
-        json.dump(prefixes, f, indent=4)
     channel = bot.get_channel(936237231436365834)
     e = discord.Embed(title="New Guild!")
     e.add_field(name="Guild Name", value=f"**{guild.name}**", inline=False)
@@ -229,13 +207,6 @@ async def on_guild_join(guild):
 
 @bot.event
 async def on_guild_remove(guild):
-    with open("prefix.json", "r") as f:
-        prefixes = json.load(f)
-
-    prefixes.pop(str(guild.id))
-    
-    with open("prefix.json", "w") as f:
-        json.dump(prefixes, f, indent=4)
     channel = bot.get_channel(936237231436365834)
     e = discord.Embed(title="Left Guild!")
     e.add_field(name="Guild Name", value=f"**{guild.name}**")
@@ -263,11 +234,6 @@ async def on_message(message):
         return
     if message.author.id in bot.blacklisted_users:
         return
-
-    prefix = await get_prefix(bot, message)
-    if "<@!731807331796385812>" in message.content:
-        await message.reply(f"My prefix is `{prefix}`! Commands using the prefix is not recommended, you should use my slash commands!")
-
 	
     await bot.process_commands(message)
 

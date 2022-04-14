@@ -299,7 +299,7 @@ class slashfun(commands.Cog):
     @commands.slash_command(name="invite", description="Get a link to invite the bot")
     async def invite(self, ctx):
         embed = discord.Embed(
-            title="Invite Me", description="[Click here!](https://discord.com/api/oauth2/authorize?client_id=731807331796385812&permissions=4281724790&scope=bot)", color=discord.Color.blue())
+            title="Invite Me", description="[Click here!](https://discord.com/oauth2/authorize?client_id=731807331796385812&permissions=2080402518&scope=bot%20applications.commands)", color=discord.Color.blue())
         await ctx.respond(embed=embed)
 
     @commands.slash_command(name="coinflip", description="Flip a coin")
