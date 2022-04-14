@@ -125,3 +125,5 @@ dmypy.json
 .pyre/
 blacklist.json
 warnings.json
+premium_guilds.json
+premium_users.json
