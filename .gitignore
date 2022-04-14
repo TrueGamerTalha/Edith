@@ -126,3 +126,9 @@ dmypy.json
 .blacklist.json
 .prefix.json
 .warnings.json
+.blacklist.json/
+.prefix.json/
+.warnings.json/
+./blacklist.json/
+./prefix.json/
+./warnings.json/
