@@ -8,10 +8,9 @@ class Status(commands.Cog):
         self.bot = bot
         self.theme_color = discord.Color.purple()
         self.status_msgs = [
-            (discord.ActivityType.watching, "[guild_count] servers | >help"),
-            (discord.ActivityType.listening, "Dua Lipa | >help"),
-            (discord.ActivityType.watching, "Edith Revamped | >help"),
-            (discord.ActivityType.watching, "for >help"),
+            (discord.ActivityType.watching, "[guild_count] servers"),
+            (discord.ActivityType.listening, "Dua Lipa"),
+            (discord.ActivityType.watching, "the new Slash Commands"),
         ]
         self.status_index = 0
 
