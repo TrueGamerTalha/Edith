@@ -123,12 +123,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-.blacklist.json
-.prefix.json
-.warnings.json
-.blacklist.json/
-.prefix.json/
-.warnings.json/
-./blacklist.json/
-./prefix.json/
-./warnings.json/
+blacklist.json
+warnings.json
