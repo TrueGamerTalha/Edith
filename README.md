@@ -10,7 +10,7 @@
 
 **Edith is a multi-purpose bot with mostly moderation and some fun features! These are the moderation features that edith has to offer: kick, ban, mute, clear, lock, slowmode, tempban, warn.**
 
-[Invite Edith](https://discord.com/oauth2/authorize?client_id=731807331796385812&permissions=2080402518&scope=bot%20applications.commands) | [Support Server](https://discord.gg/YENpHmDy8H) |
+[Invite Edith](https://discord.com/oauth2/authorize?client_id=731807331796385812&permissions=2080402518&scope=bot%20applications.commands) | [Support Server](https://discord.gg/YENpHmDy8H) 
 
 </div>
 
